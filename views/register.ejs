@@ -13,7 +13,7 @@
         <div class = "container register">
             <h1><%= title %></h1>
 
-            <form role = "form ">
+            <form class="space" role = "form " ng-submit = "submitRegister()">
                 <div class = "form-group">
                     <label>Username:</label>
                     <input type = "text" placeholder = "Username" class = "form-control" required ng-model = "registerData.username">
@@ -27,7 +27,7 @@
                     <input type = "password" placeholder = "Password" class = "form-control" required ng-model = "registerData.confirmPassword">
                 </div>
                 <div align="center">
-                    <input class = "btn btn-success space" ng-show = "!registerLoading" ng-click = "submitRegister()" value = "Register">
+                    <input class = "btn btn-success" ng-show = "!registerLoading" type="submit"  value = "Register">
                 </div>
             </form>
 

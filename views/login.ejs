@@ -13,7 +13,7 @@
         <div class = "container login">
             <h1><%= title %></h1>
 
-            <form role = "form ">
+            <form class="space" role = "form" ng-submit = "submitLogin()">
                 <div class = "form-group">
                     <label>Username:</label>
                     <input type = "text"  placeholder = "Username" class = "form-control"  ng-model = "loginData.username" required>
@@ -22,8 +22,8 @@
                     <label>Password:</label>
                     <input type = "password" placeholder = "Password" class = "form-control" ng-model = "loginData.password" required>
                 </div>
-                <div align="center">
-                    <input class = "btn btn-primary space" ng-show = "!loginLoading" ng-click = "submitLogin()" value = "Log In">
+                <div align="center " >
+                    <input class = "btn btn-primary" ng-show = "!loginLoading" type="submit" value = "Log In">
                 </div>
             </form>
 
