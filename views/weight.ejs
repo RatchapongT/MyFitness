@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang = "en">
+
+    <% include partials/page/jsdefaults.ejs %>
+    <head>
+        <% include partials/page/head.ejs %>
+    </head>
+    <% include partials/page/navbar.ejs %>
+
+    <script src = "/angular/weight.js"></script>
+
+    <body ng-app = "weightApp" ng-controller = "weightControllers" ng-cloak>
+        <div class = "container">
+            <h1><%= title %></h1>
+
+            <h3>Weight Input</h3>
+
+            <form class = "form-horizontal">
+                <fieldset>
+                    <div class = "form-group">
+                        <label class = "col-lg-2 control-label">Weight</label>
+
+                        <div class = "col-lg-10">
+                            <input type = "number" class = "form-control"
+                                   placeholder = "Weight"
+                                   ng-model = "weightData.weight" required>
+                        </div>
+                    </div>
+                    <div class = "form-group">
+                        <label class = "col-lg-2 control-label">Cloth</label>
+
+                        <div class = "col-lg-10">
+                            <input type = "checkbox" data-toggle = "checkbox"
+                                   ng-model = "weightData.cloth">
+                        </div>
+                    </div>
+                    <div class = "form-group">
+                        <label class = "col-lg-2 control-label">Meal</label>
+
+                        <div class = "col-lg-10">
+                            <div class = "radio">
+                                <label><input ng-model = "weightData.meal" value = "beforeMeal" type = "radio" name = "optradio">Before Meal</label>
+                            </div>
+                            <div class = "radio">
+                                <label><input ng-model = "weightData.meal" value = "afterMeal" type = "radio" name = "optradio">After Meal</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class = "form-group" align = "center">
+                        <button ng-show = "!weightLoading" type = "submit" class = "btn btn-primary" ng-click = "addWeight()">Record Weight
+                        </button>
+                    </div>
+                </fieldset>
+                <p class = "text-center" ng-show = "weightLoading">
+                    <span class = "fa fa-spinner fa-spin fa-3x"></span>
+                </p>
+
+                <div align = "center">
+                    <div class = "alert alert-success message"
+                         ng-if = "weightStatusCode == 1">
+                        {{weightMessage}}
+                    </div>
+                </div>
+                <div align = "center">
+                    <div class = "alert alert-danger message"
+                         ng-if = "weightStatusCode == 2">
+                        {{weightMessage}}
+                    </div>
+                </div>
+            </form>
+
+            <table class = "table table-bordered table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th style = "text-align:center">
+                            <a ng-click = "sortType = 'weight'; sortReverse = !sortReverse" style = "cursor: hand; cursor: pointer">Weight
+                                <span ng-show = "sortType == 'weight' && !sortReverse" class = "fa fa-caret-down"></span>
+                                <span ng-show = "sortType == 'weight' && sortReverse" class = "fa fa-caret-up"></span>
+                            </a>
+                        </th>
+                        <th style = "text-align:center">
+                            <a ng-click = "sortType = 'cloth'; sortReverse = !sortReverse" style = "cursor: hand; cursor: pointer">Cloth
+                                <span ng-show = "sortType == 'cloth' && !sortReverse" class = "fa fa-caret-down"></span>
+                                <span ng-show = "sortType == 'cloth' && sortReverse" class = "fa fa-caret-up"></span>
+                            </a>
+                        </th>
+                        <th style = "text-align:center">
+                            <a ng-click = "sortType = 'beforeMeal'; sortReverse = !sortReverse" style = "cursor: hand; cursor: pointer">Before Meal
+                                <span ng-show = "sortType == 'beforeMeal' && !sortReverse" class = "fa fa-caret-down"></span>
+                                <span ng-show = "sortType == 'beforeMeal' && sortReverse" class = "fa fa-caret-up"></span>
+                            </a>
+                        </th>
+                        <th style = "text-align:center">
+                            <a ng-click = "sortType = 'afterMeal'; sortReverse = !sortReverse" style = "cursor: hand; cursor: pointer">After Meal
+                                <span ng-show = "sortType == 'afterMeal' && !sortReverse" class = "fa fa-caret-down"></span>
+                                <span ng-show = "sortType == 'afterMeal' && sortReverse" class = "fa fa-caret-up"></span>
+                            </a>
+                        </th>
+                        <th style = "text-align:center">
+                            <a ng-click = "sortType = 'timestamp'; sortReverse = !sortReverse" style = "cursor: hand; cursor: pointer">Recorded
+                                <span ng-show = "sortType == 'timestamp' && !sortReverse" class = "fa fa-caret-down"></span>
+                                <span ng-show = "sortType == 'timestamp' && sortReverse" class = "fa fa-caret-up"></span>
+                            </a>
+                        </th>
+                        <th style = "text-align:center">
+                            Delete
+                        </th>
+                    </tr>
+                </thead>
+                <tr ng-repeat = "weightObject in weightObjects | orderBy:sortType:sortReverse">
+                    <td align = "center">{{weightObject.weight }}</td>
+                    <td align = "center">
+                        <span ng-if = "weightObject.cloth == true"
+                              style = "color:mediumseagreen">
+                            <i class = "fa fa-check-circle"></i>
+                        </span>
+                        <span ng-if = "weightObject.cloth == false"
+                              style = "color: red">
+                            <i class = "fa fa-times-circle"></i>
+                        </span>
+                    </td>
+                    <td align = "center">
+                        <span ng-if = "weightObject.beforeMeal == true"
+                              style = "color:mediumseagreen">
+                            <i class = "fa fa-check-circle"></i>
+                        </span>
+                        <span ng-if = "weightObject.beforeMeal == false"
+                              style = "color: red">
+                            <i class = "fa fa-times-circle"></i>
+                        </span>
+                    </td>
+                    <td align = "center">
+                        <span ng-if = "weightObject.afterMeal == true"
+                              style = "color:mediumseagreen">
+                            <i class = "fa fa-check-circle"></i>
+                        </span>
+                        <span ng-if = "weightObject.afterMeal == false"
+                              style = "color: red">
+                            <i class = "fa fa-times-circle"></i>
+                        </span>
+                    </td>
+                    <td align = "center">{{formatDate(weightObject.timestamp)}}</td>
+                    <td align = "center">
+
+                    <span ng-click = "deleteWeight(weightObject)"
+                          style = "cursor: pointer; cursor: hand;">
+                    <i class = "fa fa-trash"></i>
+                    </span>
+
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>

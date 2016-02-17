@@ -1,0 +1,37 @@
+/* Google Font */
+@import url(http://fonts.googleapis.com/css?family=Cabin:400,400italic,600,600italic,700,700italic);
+/* Cabin */
+@import url(http://fonts.googleapis.com/css?family=Lato:400,400italic,700,700italic);
+
+
+body {
+    padding-top: 150px;
+}
+
+a {
+    color: #00B7FF;
+}
+
+.login {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+.register {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+.space {
+    margin-top: 15px;
+    margin-bottom: 30px;
+}
+.message {
+    width: 300px;
+}
+form input[type='number']::-webkit-outer-spin-button,
+form input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

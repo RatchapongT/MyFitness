@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang = "en">
+
+    <% include partials/page/jsdefaults.ejs %>
+    <head>
+        <% include partials/page/head.ejs %>
+    </head>
+    <% include partials/page/navbar.ejs %>
+
+    <script src = "/angular/workout.js"></script>
+
+    <body ng-app = "workoutApp" ng-controller = "workoutControllers" ng-cloak>
+        <div class = "container">
+            <h1><%= title %></h1>
+
+            <h3>Workout Input</h3>
+
+            <form class = "form-horizontal">
+                <fieldset>
+                    <div class = "form-group">
+                        <label class = "col-lg-2 control-label">Workout</label>
+
+                        <div class = "col-lg-10">
+                            <input type = "text" class = "form-control"
+                                   placeholder = "Workout Name"
+                                   ng-model = "workoutData.workoutName" required>
+                        </div>
+                    </div>
+                    <div class = "form-group">
+                        <label class = "col-lg-2 control-label">Rep</label>
+
+                        <div class = "col-lg-10">
+                            <input type = "number" class = "form-control"
+                                   placeholder = "Rep"
+                                   ng-model = "workoutData.rep" required>
+                        </div>
+                    </div>
+                    <div class = "form-group">
+                        <label class = "col-lg-2 control-label">Weight</label>
+
+                        <div class = "col-lg-10">
+                            <input type = "number" class = "form-control"
+                                   placeholder = "Weight"
+                                   ng-model = "workoutData.weight" required>
+                        </div>
+                    </div>
+                    <div class = "form-group" align = "center">
+                        <button ng-show = "!weightLoading" type = "submit" class = "btn btn-primary" ng-click = "addWorkout()">Record Workout
+                        </button>
+                    </div>
+                </fieldset>
+                <p class = "text-center" ng-show = "workoutLoading">
+                    <span class = "fa fa-spinner fa-spin fa-3x"></span>
+                </p>
+
+                <div align = "center">
+                    <div class = "alert alert-success message"
+                         ng-if = "workoutStatusCode == 1">
+                        {{workoutMessage}}
+                    </div>
+                </div>
+                <div align = "center">
+                    <div class = "alert alert-danger message"
+                         ng-if = "workoutStatusCode == 2">
+                        {{workoutMessage}}
+                    </div>
+                </div>
+            </form>
+
+            <table class = "table table-bordered table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th style = "text-align:center">
+                            <a ng-click = "sortType = 'workoutName'; sortReverse = !sortReverse" style = "cursor: hand; cursor: pointer">Workout
+                                <span ng-show = "sortType == 'workoutName' && !sortReverse" class = "fa fa-caret-down"></span>
+                                <span ng-show = "sortType == 'workoutName' && sortReverse" class = "fa fa-caret-up"></span>
+                            </a>
+                        </th>
+                        <th style = "text-align:center">
+                            <a ng-click = "sortType = 'rep'; sortReverse = !sortReverse" style = "cursor: hand; cursor: pointer">Cloth
+                                <span ng-show = "sortType == 'rep' && !sortReverse" class = "fa fa-caret-down"></span>
+                                <span ng-show = "sortType == 'rep' && sortReverse" class = "fa fa-caret-up"></span>
+                            </a>
+                        </th>
+                        <th style = "text-align:center">
+                            <a ng-click = "sortType = 'weight'; sortReverse = !sortReverse" style = "cursor: hand; cursor: pointer">Before Meal
+                                <span ng-show = "sortType == 'weight' && !sortReverse" class = "fa fa-caret-down"></span>
+                                <span ng-show = "sortType == 'weight' && sortReverse" class = "fa fa-caret-up"></span>
+                            </a>
+                        </th>
+                        <th style = "text-align:center">
+                            <a ng-click = "sortType = 'timestamp'; sortReverse = !sortReverse" style = "cursor: hand; cursor: pointer">Recorded
+                                <span ng-show = "sortType == 'timestamp' && !sortReverse" class = "fa fa-caret-down"></span>
+                                <span ng-show = "sortType == 'timestamp' && sortReverse" class = "fa fa-caret-up"></span>
+                            </a>
+                        </th>
+                        <th style = "text-align:center">
+                            Delete
+                        </th>
+                    </tr>
+                </thead>
+                <tr ng-repeat = "workoutObject in workoutObjects | orderBy:sortType:sortReverse">
+                    <td align = "center">{{workoutObject.workoutName }}</td>
+                    <td align = "center">{{workoutObject.rep }}</td>
+                    <td align = "center">{{workoutObject.weight }}</td>
+                    <td align = "center">{{formatDate(workoutObject.timestamp)}}</td>
+                    <td align = "center">
+                    <span ng-click = "deleteWorkout(workoutObject)"
+                          style = "cursor: pointer; cursor: hand;">
+                    <i class = "fa fa-trash"></i>
+                    </span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>

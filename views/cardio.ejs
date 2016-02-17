@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang = "en">
+
+    <% include partials/page/jsdefaults.ejs %>
+    <head>
+        <% include partials/page/head.ejs %>
+    </head>
+    <% include partials/page/navbar.ejs %>
+
+    <script src = "/angular/cardio.js"></script>
+
+    <body ng-app = "cardioApp" ng-controller = "cardioControllers" ng-cloak>
+        <div class = "container">
+            <h1><%= title %></h1>
+
+            <h3>Cardio Input</h3>
+
+            <form class = "form-horizontal">
+                <fieldset>
+                    <div class = "form-group">
+                        <label class = "col-lg-2 control-label">Cardio</label>
+
+                        <div class = "col-lg-10">
+                            <input type = "text" class = "form-control"
+                                   placeholder = "Cardio Name"
+                                   ng-model = "cardioData.cardioName" required>
+                        </div>
+                    </div>
+                    <div class = "form-group">
+                        <label class = "col-lg-2 control-label">Miles</label>
+
+                        <div class = "col-lg-10">
+                            <input type = "number" class = "form-control"
+                                   placeholder = "Miles"
+                                   ng-model = "cardioData.miles" required>
+                        </div>
+                    </div>
+                    <div class = "form-group">
+                        <label class = "col-lg-2 control-label">Calories</label>
+
+                        <div class = "col-lg-10">
+                            <input type = "number" class = "form-control"
+                                   placeholder = "Calories"
+                                   ng-model = "cardioData.calories" required>
+                        </div>
+                    </div>
+                    <div class = "form-group">
+                        <label class = "col-lg-2 control-label">RPM</label>
+
+                        <div class = "col-lg-10">
+                            <input type = "number" class = "form-control"
+                                   placeholder = "RPM"
+                                   ng-model = "cardioData.roundPerMinute" required>
+                        </div>
+                    </div>
+                    <div class = "form-group">
+                        <label class = "col-lg-2 control-label">Average Speed</label>
+
+                        <div class = "col-lg-10">
+                            <input type = "number" class = "form-control"
+                                   placeholder = "Average Speed"
+                                   ng-model = "cardioData.averageSpeed" required>
+                        </div>
+                    </div>
+
+                    <div class = "form-group">
+                        <label class = "col-lg-2 control-label">Duration</label>
+
+                        <div class = "col-lg-10">
+                            <input type = "number" class = "form-control"
+                                   placeholder = "Duration"
+                                   ng-model = "cardioData.duration" required>
+                        </div>
+                    </div>
+                    <div class = "form-group" align = "center">
+                        <button ng-show = "!weightLoading" type = "submit" class = "btn btn-primary" ng-click = "addCardio()">Record Cardio
+                        </button>
+                    </div>
+                </fieldset>
+                <p class = "text-center" ng-show = "cardioLoading">
+                    <span class = "fa fa-spinner fa-spin fa-3x"></span>
+                </p>
+
+                <div align = "center">
+                    <div class = "alert alert-success message"
+                         ng-if = "cardioStatusCode == 1">
+                        {{cardioMessage}}
+                    </div>
+                </div>
+                <div align = "center">
+                    <div class = "alert alert-danger message"
+                         ng-if = "cardioStatusCode == 2">
+                        {{cardioMessage}}
+                    </div>
+                </div>
+            </form>
+
+            <table class = "table table-bordered table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th style = "text-align:center">
+                            <a ng-click = "sortType = 'cardioName'; sortReverse = !sortReverse" style = "cursor: hand; cursor: pointer">Cardio
+                                <span ng-show = "sortType == 'cardioName' && !sortReverse" class = "fa fa-caret-down"></span>
+                                <span ng-show = "sortType == 'cardioName' && sortReverse" class = "fa fa-caret-up"></span>
+                            </a>
+                        </th>
+                        <th style = "text-align:center">
+                            <a ng-click = "sortType = 'miles'; sortReverse = !sortReverse" style = "cursor: hand; cursor: pointer">Cloth
+                                <span ng-show = "sortType == 'miles' && !sortReverse" class = "fa fa-caret-down"></span>
+                                <span ng-show = "sortType == 'miles' && sortReverse" class = "fa fa-caret-up"></span>
+                            </a>
+                        </th>
+                        <th style = "text-align:center">
+                            <a ng-click = "sortType = 'calories'; sortReverse = !sortReverse" style = "cursor: hand; cursor: pointer">Before Meal
+                                <span ng-show = "sortType == 'calories' && !sortReverse" class = "fa fa-caret-down"></span>
+                                <span ng-show = "sortType == 'calories' && sortReverse" class = "fa fa-caret-up"></span>
+                            </a>
+                        </th>
+                        <th style = "text-align:center">
+                            <a ng-click = "sortType = 'roundPerMinute'; sortReverse = !sortReverse" style = "cursor: hand; cursor: pointer">Recorded
+                                <span ng-show = "sortType == 'roundPerMinute' && !sortReverse" class = "fa fa-caret-down"></span>
+                                <span ng-show = "sortType == 'roundPerMinute' && sortReverse" class = "fa fa-caret-up"></span>
+                            </a>
+                        </th>
+                        <th style = "text-align:center">
+                            <a ng-click = "sortType = 'averageSpeed'; sortReverse = !sortReverse" style = "cursor: hand; cursor: pointer">Recorded
+                                <span ng-show = "sortType == 'averageSpeed' && !sortReverse" class = "fa fa-caret-down"></span>
+                                <span ng-show = "sortType == 'averageSpeed' && sortReverse" class = "fa fa-caret-up"></span>
+                            </a>
+                        </th>
+                        <th style = "text-align:center">
+                            <a ng-click = "sortType = 'duration'; sortReverse = !sortReverse" style = "cursor: hand; cursor: pointer">Recorded
+                                <span ng-show = "sortType == 'duration' && !sortReverse" class = "fa fa-caret-down"></span>
+                                <span ng-show = "sortType == 'duration' && sortReverse" class = "fa fa-caret-up"></span>
+                            </a>
+                        </th>
+                        <th style = "text-align:center">
+                            <a ng-click = "sortType = 'timestamp'; sortReverse = !sortReverse" style = "cursor: hand; cursor: pointer">Recorded
+                                <span ng-show = "sortType == 'timestamp' && !sortReverse" class = "fa fa-caret-down"></span>
+                                <span ng-show = "sortType == 'timestamp' && sortReverse" class = "fa fa-caret-up"></span>
+                            </a>
+                        </th>
+                        <th style = "text-align:center">
+                            Delete
+                        </th>
+                    </tr>
+                </thead>
+                <tr ng-repeat = "cardioObject in cardioObjects | orderBy:sortType:sortReverse">
+                    <td align = "center">{{cardioObject.cardioName }}</td>
+                    <td align = "center">{{cardioObject.miles }}</td>
+                    <td align = "center">{{cardioObject.calories }}</td>
+                    <td align = "center">{{cardioObject.roundPerMinute }}</td>
+                    <td align = "center">{{cardioObject.averageSpeed }}</td>
+                    <td align = "center">{{cardioObject.duration }}</td>
+                    <td align = "center">{{formatDate(cardioObject.timestamp)}}</td>
+                    <td align = "center">
+                    <span ng-click = "deleteCardio(cardioObject)"
+                          style = "cursor: pointer; cursor: hand;">
+                    <i class = "fa fa-trash"></i>
+                    </span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>
