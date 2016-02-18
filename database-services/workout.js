@@ -2,7 +2,7 @@ var Workout = require('../database-models/databaseModels').Workout;
 var _ = require('underscore')
 
 exports.findAllWorkout = function (req, next) {
-    Workout.find({_userDetail: req.user._id}).sort({date: -1}).exec(function(err, workoutObjects) {
+    Workout.find({_userDetail: req.user._id}).sort({timestamp: 1}).exec(function(err, workoutObjects) {
         if (err) {
             return next(err, null);
         } else {
@@ -58,6 +58,7 @@ exports.addSet = function (req, next) {
 
 exports.deleteSet = function (req, next) {
     Workout.findOne({_id: req.body._id}, function (err, workObject) {
+
         var newSuperset = _.clone(workObject.superset);
         _.each(newSuperset, function (superset) {
             superset.workoutSet.splice( req.body.index, 1);
@@ -66,10 +67,11 @@ exports.deleteSet = function (req, next) {
             $set: {
                 superset: newSuperset
             }
-        }, function (err) {
+        }, function (err, result) {
             if (err) {
                 return next(err);
             } else {
+                console.log(result);
                 return next(null);
             }
 

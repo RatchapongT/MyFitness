@@ -1,12 +1,17 @@
 angular.module('workoutApp', ['workoutControllers']);
 
+
 var workoutControllers = angular.module('workoutControllers', []);
 workoutControllers.controller('workoutControllers', ['$scope', '$http', '$window', function ($scope, $http, $window) {
+
     $scope.sortType = 'timestamp';
-    $scope.exerciseLoading = false;
+    $scope.exerciseLoading = true;
     $scope.exerciseStatusCode = 0;
     $scope.exerciseMessage = '';
     $scope.exerciseData = {};
+
+
+    $scope.addSetLoadingArray = [];
     $scope.repData = {};
     $scope.weightData = {};
     $scope.exerciseData.superset = 1;
@@ -14,7 +19,7 @@ workoutControllers.controller('workoutControllers', ['$scope', '$http', '$window
         $scope.workoutObjects = data.workoutObjects;
         $scope.workoutStatusCode = data.statusCode;
         $scope.workoutMessage = data.message;
-        $scope.workoutLoading = false;
+        $scope.exerciseLoading = false;
     });
     $scope.createExercise = function () {
         $scope.exerciseLoading = true;
@@ -27,34 +32,11 @@ workoutControllers.controller('workoutControllers', ['$scope', '$http', '$window
             $scope.workoutObjects = data.workoutObjects;
         });
     };
-    $scope.addWorkout = function () {
-        $scope.workoutLoading = true;
-        $scope.workoutStatusCode = 0;
-        $scope.workoutMessage = '';
-        $http.post('/workout/api/add', $scope.workoutData).success(function (data) {
-            $scope.workoutLoading = false;
-            $scope.workoutStatusCode = data.statusCode;
-            $scope.workoutMessage = data.message;
-            $scope.workoutObjects = data.workoutObjects;
-        });
-    };
 
-    $scope.deleteWorkout = function (workoutObject) {
-
-        $scope.workoutLoading = true;
-        $scope.workoutStatusCode = 0;
-        $scope.workoutMessage = '';
-        $http.delete('/workout/api/delete/' + workoutObject._id).success(function (data) {
-            $scope.workoutLoading = false;
-            $scope.workoutStatusCode = data.statusCode;
-            $scope.workoutMessage = data.message;
-            $scope.workoutObjects = data.workoutObjects;
-        });
-    };
-    $scope.addSet = function (workoutObject) {
-        $scope.addSetLoading = true;
+    $scope.addSet = function (workoutObject, index) {
+        $scope.addSetLoadingArray[index] = true;
         $http.post('/set/api/add', {_id: workoutObject._id}).success(function (data) {
-            $scope.addSetLoading = false;
+            $scope.addSetLoadingArray[index] = false;
             $scope.workoutObjects = data.workoutObjects;
         });
     };
@@ -82,8 +64,8 @@ workoutControllers.controller('workoutControllers', ['$scope', '$http', '$window
             var currentSet = workoutObject.superset[i];
             for (var j = 0; j < currentSet.workoutSet.length; j++) {
                 if (j == index) {
-                    $scope.weightData[i] = currentSet.workoutSet[j].rep;
-                    $scope.repData[i] = currentSet.workoutSet[j].weight;
+                    $scope.weightData[i] = currentSet.workoutSet[j].weight;
+                    $scope.repData[i] = currentSet.workoutSet[j].rep;
                 }
             }
         }
@@ -91,7 +73,10 @@ workoutControllers.controller('workoutControllers', ['$scope', '$http', '$window
     };
     $scope.formatDate = function (inputDate) {
         var m = moment(inputDate);
-        return m.format('MMMM Do YYYY, h:mm:ss a');
+        var array = [];
+        array.push(m.format('ddd, MMM Do YYYY'));
+        array.push(m.format('h:mm:ss a'));
+        return array;
     }
 }]);
 

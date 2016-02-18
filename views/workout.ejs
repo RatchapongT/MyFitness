@@ -42,7 +42,6 @@
 
                         <div class = "col-lg-10">
                             <input type = "text" class = "form-control"
-                                   placeholder = "Exercise 1"
                                    ng-model = "exerciseData.exercise1" required>
                         </div>
                     </div>
@@ -98,22 +97,22 @@
 
             <table style = "text-align:center;width: auto" class = "table table-bordered" ng-repeat = "workoutObject in workoutObjects">
                 <tr>
-                    <td rowspan = "2"></td>
+                    <td rowspan = "2" style="vertical-align: middle"><strong>{{formatDate(workoutObject.timestamp)[0]}} <br>{{formatDate(workoutObject.timestamp)[1]}}</strong></td>
                     <td style = "width: 130px;" ng-repeat = "workoutSet in workoutObject.superset[0].workoutSet" colspan = "2"
                         ng-style = "$index % 2 == 0 ? {'background-color': ' #f0f0f5'} : {'background-color': 'white'}">Set {{$index + 1}} <br>
                         <span style = "font-size: 25px; margin-left: 5px"><i class = "fa fa-edit" style = "cursor: pointer" ng-click = "toggleEdit(workoutObject, $index)"></i></span>
                     </td>
                     <td rowspan = "{{workoutObject.superset.length + 2}}" style = "width: 50px; vertical-align: middle; font-size: 25px">
-                        <span style = "font-size: 25px" ng-show = "addSetLoading" class = "fa fa-spinner fa-spin fa-3x"></span>
-                        <span ng-show = "!addSetLoading"><i class = "fa fa-plus-circle" style = "color: #1abc9c; cursor: pointer" ng-click = "addSet(workoutObject)"></i></span>
+                        <span style = "font-size: 25px" ng-show = "addSetLoadingArray[$index]" class = "fa fa-spinner fa-spin fa-3x"></span>
+                        <span ng-show = "!addSetLoadingArray[$index]"><i class = "fa fa-plus-circle" style = "color: #1abc9c; cursor: pointer" ng-click = "addSet(workoutObject, $index)"></i></span>
                     </td>
                 </tr>
                 <tr>
-                    <td style = "width: 65px" ng-if = "$parent.$index == 0"
+                    <td style = "width: 65px"
                         ng-repeat-start = "workoutSet in workoutObject.superset[0].workoutSet"
                         ng-style = "$index % 2 == 0 ? {'background-color': ' #f0f0f5'} : {'background-color': 'white'}">Rep
                     </td>
-                    <td style = "width: 65px" ng-if = "$parent.$index == 0"
+                    <td style = "width: 65px"
                         ng-style = "$index % 2 == 0 ? {'background-color': ' #f0f0f5'} : {'background-color': 'white'}"
                         ng-repeat-end>Weight
                     </td>
@@ -154,7 +153,7 @@
                         <span style = "font-size: 25px" ng-show = "editSetLoading" class = "fa fa-spinner fa-spin fa-3x"></span>
                         <button style="margin-right: 50px"ng-show = "!editSetLoading" type = "submit" class = "btn btn-success">Save
                         </button>
-                        <button style="margin-left: 50px" ng-show = "!editSetLoading" ng-click ="deleteSet(editSetObject, selectedIndex)" class = "btn btn-danger">Remove
+                        <button type="button" style="margin-left: 50px" ng-show = "!editSetLoading" ng-click ="deleteSet(editSetObject, selectedIndex)" class = "btn btn-danger">Remove
                         </button>
                     </form>
                 </div>
