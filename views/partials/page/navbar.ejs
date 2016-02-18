@@ -1,17 +1,5 @@
 <div class = "navbar-wrapper">
     <header class = "navbar navbar-default navbar-fixed-top" id = "MainMenu">
-        <div class = "navbar-extra-top clearfix">
-            <div class = "navbar container-fluid">
-                <ul class = "nav navbar-nav navbar-left">
-                    <% if (typeof currentUser != 'undefined' && currentUser != "") { %>
-                    <li class = "menu-item"><a href = "/logout"><i class = "fa fa-sign-out"></i>Sign Out (<%= currentUser %>) </a></li>
-                    <% } else { %>
-                    <li class = "menu-item"><a href = "/"><i class = "fa fa-sign-in"></i> Sign In</a></li>
-                    <li class = "menu-item"><a href = "/register"><i class = "fa fa-pencil"></i> Register</a></li>
-                    <% } %>
-                </ul>
-            </div>
-        </div>
 
         <div class = "container-fluid collapse-md" id = "navbar-main-container">
             <div class = "navbar-header">
@@ -25,9 +13,16 @@
 
             <nav class = "navbar-collapse collapse" id = "navbar-main">
                 <ul class = "nav navbar-nav navbar-right">
+
+                    <% if (typeof currentUser != 'undefined' && currentUser != "") { %>
                     <li><a href = "/workout">Workout</a></li>
                     <li><a href = "/cardio">Cardio</a></li>
                     <li><a href = "/weight">Weight</a></li>
+                    <li class = "menu-item"><a href = "/logout"><i class = "fa fa-sign-out"></i>Sign Out (<%= currentUser %>) </a></li>
+                    <% } else { %>
+                    <li class = "menu-item"><a href = "/"><i class = "fa fa-sign-in"></i> Sign In</a></li>
+                    <li class = "menu-item"><a href = "/register"><i class = "fa fa-pencil"></i> Register</a></li>
+                    <% } %>
                 </ul>
             </nav>
         </div>

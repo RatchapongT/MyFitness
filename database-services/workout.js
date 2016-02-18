@@ -1,8 +1,8 @@
 var Workout = require('../database-models/databaseModels').Workout;
-
+var _ = require('underscore')
 
 exports.findAllWorkout = function (req, next) {
-    Workout.find({_userDetail: req.user._id}, function (err, workoutObjects) {
+    Workout.find({_userDetail: req.user._id}).sort({date: -1}).exec(function(err, workoutObjects) {
         if (err) {
             return next(err, null);
         } else {
@@ -11,16 +11,98 @@ exports.findAllWorkout = function (req, next) {
     })
 };
 
-exports.addWorkout = function (req, next) {
+exports.createExercise = function (req, next) {
+    var superset = [];
+    for (var i = 1; i <= parseInt(req.body.superset); i++) {
+        superset.push({
+            workoutName: req.body['exercise' + i],
+            workoutSet: []
+        })
+    }
     var newWorkout = new Workout({
         _userDetail: req.user._id,
-        workoutName: req.body.workoutName,
-        rep: req.body.rep,
-        weight: req.body.weight,
+        superset: superset
     });
     newWorkout.save(function (err) {
         return next(err);
     })
+};
+
+exports.addSet = function (req, next) {
+    Workout.findOne({_id: req.body._id}, function (err, workObject) {
+
+        var newSuperset = _.clone(workObject.superset);
+        _.each(newSuperset, function (superset) {
+            superset.workoutSet.push({
+                rep: 0,
+                weight: 0,
+                timestamp: new Date()
+            })
+        });
+        Workout.update({_id: req.body._id}, {
+            $set: {
+                superset: newSuperset
+            }
+        }, function (err) {
+            if (err) {
+                return next(err);
+            } else {
+                return next(null);
+            }
+
+        })
+    });
+
+
+};
+
+exports.deleteSet = function (req, next) {
+    Workout.findOne({_id: req.body._id}, function (err, workObject) {
+        var newSuperset = _.clone(workObject.superset);
+        _.each(newSuperset, function (superset) {
+            superset.workoutSet.splice( req.body.index, 1);
+        });
+        Workout.update({_id: req.body._id}, {
+            $set: {
+                superset: newSuperset
+            }
+        }, function (err) {
+            if (err) {
+                return next(err);
+            } else {
+                return next(null);
+            }
+
+        })
+    });
+
+
+};
+
+exports.editSet = function (req, next) {
+
+    Workout.findOne({_id: req.body._id}, function (err, workObject) {
+        var newSuperset = _.clone(workObject.superset);
+        for (var i = 0; i < newSuperset.length; i++) {
+            newSuperset[i].workoutSet[req.body.index].rep = req.body.rep[i];
+            newSuperset[i].workoutSet[req.body.index].weight = req.body.weight[i];
+
+        }
+        Workout.update({_id: req.body._id}, {
+            $set: {
+                superset: newSuperset
+            }
+        }, function (err) {
+            if (err) {
+                return next(err);
+            } else {
+                return next(null);
+            }
+
+        })
+    });
+
+
 };
 exports.deleteWorkout = function (req, next) {
     Workout.findOne({_id: req.params._id}, function (err, workoutObject) {

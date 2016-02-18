@@ -19,11 +19,29 @@ var weightSchema = new Schema({
     created: {type: Date, default: Date.now}
 });
 
+//var workoutSchema = new Schema({
+//    _userDetail: {type: Schema.Types.ObjectId, ref: 'User', required: 'User Detail required'},
+//    workoutName: {type: String, required: 'Workout Name required', uppercase: true},
+//    rep: {type: Number, required: 'Rep required'},
+//    weight: {type: Number, required: 'Weight required'},
+//    timestamp: {type: Date, default: Date.now},
+//    created: {type: Date, default: Date.now}
+//});
+
 var workoutSchema = new Schema({
     _userDetail: {type: Schema.Types.ObjectId, ref: 'User', required: 'User Detail required'},
-    workoutName: {type: String, required: 'Workout Name required', uppercase: true},
-    rep: {type: Number, required: 'Rep required'},
-    weight: {type: Number, required: 'Weight required'},
+    superset: [
+        {
+            workoutName: {type: String, required: 'Workout Name required', uppercase: true},
+            workoutSet: [
+                {
+                    rep: Number,
+                    weight: Number,
+                    timestamp: {type: Date, default: Date.now},
+                }
+            ]
+        }
+    ],
     timestamp: {type: Date, default: Date.now},
     created: {type: Date, default: Date.now}
 });
@@ -49,5 +67,5 @@ module.exports = {
     User: User,
     Weight: Weight,
     Workout: Workout,
-    Cardio: Cardio
+    Cardio: Cardio,
 };

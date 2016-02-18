@@ -28,14 +28,9 @@ registerControllers.controller('registerControllers', ['$scope', '$http', '$wind
                 $scope.registerStatusCode = data.statusCode;
                 $scope.registerMessage = data.message;
                 if (data.statusCode == 1) {
-                    $http.post('/login', $scope.loginData).success(function (data) {
-                        $scope.registerLoading = false;
-                        $scope.registerStatusCode = data.statusCode;
-                        $scope.registerMessage = data.message;
-                        if (data.statusCode == 1) {
-                            $window.location.href = '/homepage';
-                        }
-                    });
+                    if (data.statusCode == 1) {
+                        $window.location.href = '/homepage';
+                    }
                 }
             });
         }
