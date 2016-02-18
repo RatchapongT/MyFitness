@@ -2,7 +2,7 @@ var Workout = require('../database-models/databaseModels').Workout;
 var _ = require('underscore')
 
 exports.findAllWorkout = function (req, next) {
-    Workout.find({_userDetail: req.user._id}).sort({timestamp: 1}).exec(function(err, workoutObjects) {
+    Workout.find({_userDetail: req.user._id}).sort({timestamp: 1}).exec(function (err, workoutObjects) {
         if (err) {
             return next(err, null);
         } else {
@@ -16,7 +16,11 @@ exports.createExercise = function (req, next) {
     for (var i = 1; i <= parseInt(req.body.superset); i++) {
         superset.push({
             workoutName: req.body['exercise' + i],
-            workoutSet: []
+            workoutSet: [{
+                rep: 0,
+                weight: 0,
+                timestamp: new Date()
+            }]
         })
     }
     var newWorkout = new Workout({
@@ -60,22 +64,41 @@ exports.deleteSet = function (req, next) {
     Workout.findOne({_id: req.body._id}, function (err, workObject) {
 
         var newSuperset = _.clone(workObject.superset);
+        var removeWorkout = false;
         _.each(newSuperset, function (superset) {
-            superset.workoutSet.splice( req.body.index, 1);
+            superset.workoutSet.splice(req.body.index, 1);
+            if (superset.workoutSet.length == 0) {
+                removeWorkout = true;
+            }
         });
-        Workout.update({_id: req.body._id}, {
-            $set: {
-                superset: newSuperset
-            }
-        }, function (err, result) {
-            if (err) {
-                return next(err);
-            } else {
-                console.log(result);
-                return next(null);
-            }
+        if (removeWorkout) {
+            Workout.findOne({_id: req.body._id}, function (err, workoutObject) {
+                if (err) {
+                    return next(err);
+                }
+                if (workoutObject) {
+                    workoutObject.remove(function (err) {
+                        return next(err);
+                    });
+                } else {
+                    return next({message: 'Object Not Found'})
+                }
+            })
+        } else {
+            Workout.update({_id: req.body._id}, {
+                $set: {
+                    superset: newSuperset
+                }
+            }, function (err, result) {
+                if (err) {
+                    return next(err);
+                } else {
+                    console.log(result);
+                    return next(null);
+                }
 
-        })
+            })
+        }
     });
 
 
@@ -106,17 +129,4 @@ exports.editSet = function (req, next) {
 
 
 };
-exports.deleteWorkout = function (req, next) {
-    Workout.findOne({_id: req.params._id}, function (err, workoutObject) {
-        if (err) {
-            return next(err);
-        }
-        if (workoutObject) {
-            workoutObject.remove(function (err) {
-                return next(err);
-            });
-        } else {
-            return next({message: 'Object Not Found'})
-        }
-    })
-};
+
