@@ -1,8 +1,17 @@
+'use strict'
 var Workout = require('../database-models/databaseModels').Workout;
-var _ = require('underscore')
-
+var Increment = require('../database-models/databaseModels').Increment;
+var _ = require('underscore');
+var moment = require('moment');
+var async = require('async');
 exports.findAllWorkout = function (req, next) {
-    Workout.find({_userDetail: req.user._id}).sort({timestamp: 1}).exec(function (err, workoutObjects) {
+    var sDate = req.params.startDate ? req.params.startDate: moment(req.body.date).startOf('day').valueOf();
+    var eDate = req.params.endDate ? req.params.endDate: moment(req.body.date).endOf('day').valueOf();
+
+    Workout.find({
+        _userDetail: req.user._id,
+        timestamp: {$gte: sDate , $lt: eDate}
+    }).sort({timestamp: 1}).exec(function (err, workoutObjects) {
         if (err) {
             return next(err, null);
         } else {
@@ -11,11 +20,271 @@ exports.findAllWorkout = function (req, next) {
     })
 };
 
+exports.createPredeterminedExercise = function (req, next) {
+    var exercise = [];
+    if (req.body.id == 1) {
+        exercise = [
+            {
+                superset: [
+                    {
+                        workOutName: 'Barbell Bench Press',
+                        setRep: [30, 10, 10, 10, 10, 5]
+                    },
+
+                    {
+                        workOutName: 'Wide Grip Chin Up',
+                        setRep: [10, 10, 10, 10, 10, 10]
+                    }
+                ]
+            },
+            {
+                superset: [
+                    {
+                        workOutName: 'Barbell Incline Bench Press',
+                        setRep: [8, 8, 8, 8, 8]
+                    },
+
+                    {
+                        workOutName: 'T Bar Row',
+                        setRep: [8, 8, 8, 8, 8]
+                    }
+                ]
+            },
+            {
+                superset: [
+                    {
+                        workOutName: 'Dumbbell Fly',
+                        setRep: [12, 12, 12, 12, 12]
+                    },
+
+                    {
+                        workOutName: 'Cable Seated Row',
+                        setRep: [12, 12, 12, 12, 12]
+                    }
+                ]
+            },
+            {
+                superset: [
+                    {
+                        workOutName: 'Dip',
+                        setRep: [10, 10, 10, 10]
+                    },
+
+                    {
+                        workOutName: 'Close Grip Chin Up',
+                        setRep: [10, 10, 10, 10]
+                    }
+                ]
+            },
+            {
+                superset: [
+                    {
+                        workOutName: 'Dumbbell Bent Arm Pullover',
+                        setRep: [12, 12, 12]
+                    },
+
+                    {
+                        workOutName: 'Cable Cross Over',
+                        setRep: [12, 12, 12]
+                    }
+                ]
+            }
+
+        ];
+    }
+    if (req.body.id == 2) {
+        exercise = [
+            {
+                superset: [
+                    {
+                        workOutName: 'Barbell Squat',
+                        setRep: [12, 12, 12, 12, 12, 12, 12, 12]
+                    }
+                ]
+            },
+            {
+                superset: [
+                    {
+                        workOutName: 'Leg Extensions',
+                        setRep: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+                    },
+
+                    {
+                        workOutName: 'Seated Leg Curl',
+                        setRep: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+                    }
+                ]
+            },
+            {
+                superset: [
+                    {
+                        workOutName: 'Standing Calf Raises',
+                        setRep: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+                    }
+                ]
+            }
+
+        ];
+    }
+    if (req.body.id == 3) {
+        exercise = [
+            {
+                superset: [
+                    {
+                        workOutName: 'Barbell Curl',
+                        setRep: [12, 12, 12, 12, 12]
+                    },
+                    {
+                        workOutName: 'Skullcrusher',
+                        setRep: [15, 15, 15, 15, 15]
+                    }
+                ]
+            },
+            {
+                superset: [
+                    {
+                        workOutName: 'Dumbbell Hammer Curls',
+                        setRep: [12, 12, 12, 12, 12]
+                    },
+
+                    {
+                        workOutName: 'Cable Straight Arm Push Down',
+                        setRep: [20, 20, 20, 20, 20]
+                    }
+                ]
+            },
+            {
+                superset: [
+                    {
+                        workOutName: 'Dumbbell Alternate Incline Curl',
+                        setRep: [6, 6, 6]
+                    },
+
+                    {
+                        workOutName: 'Cable Rope Overhead Triceps Extension',
+                        setRep: [15, 15, 15]
+                    }
+                ]
+            },
+            {
+                superset: [
+                    {
+                        workOutName: 'Dumbbell Concentration Curls',
+                        setRep: [12, 12, 12]
+                    },
+
+                    {
+                        workOutName: 'Dumbbell Tricep Kickback',
+                        setRep: [12, 12, 12]
+                    }
+                ]
+            }
+
+
+        ];
+    }
+    if (req.body.id == 4) {
+        exercise = [
+            {
+                superset: [
+                    {
+                        workOutName: 'Barbell Shoulder Press',
+                        setRep: [6, 6, 6, 6]
+                    }
+                ]
+            },
+            {
+                superset: [
+                    {
+                        workOutName: 'Dumbbell Arnold Press',
+                        setRep: [10, 8, 6, 6, 8]
+                    },
+
+                    {
+                        workOutName: 'Barbell Up Right Row',
+                        setRep: [10, 10, 10, 10, 10]
+                    }
+                ]
+            },
+            {
+                superset: [
+                    {
+                        workOutName: 'Dumbbell Lateral Raise',
+                        setRep: [12, 12, 12]
+                    },
+
+                    {
+                        workOutName: 'Dumbbell Bent Over Delt Raise',
+                        setRep: [12, 12, 12]
+                    }
+                ]
+            }
+
+
+        ];
+    }
+    var date = new Date();
+    async.each(exercise,
+        function (ex, callback) {
+            var array = [];
+
+            _.each(ex.superset, function (superset) {
+                var workoutSet = [];
+                _.each(superset.setRep, function (rep) {
+                    workoutSet.push({
+                        rep: rep
+                    })
+                });
+                array.push({
+                    workoutName: superset.workOutName,
+                    workoutSet: workoutSet
+                })
+            });
+            Increment.findOneAndUpdate({_userDetail: req.user._id}, {$inc: {index: 1}}, {new: true}, function (err, incrementObject) {
+                var selectedDate = new Date(req.body.date);
+                date.setDate(selectedDate.getDate());
+                date.setMonth(selectedDate.getMonth());
+                date.setYear(selectedDate.getFullYear());
+                var newWorkout = new Workout({
+                    timestamp: date,
+                    _userDetail: req.user._id,
+                    index: incrementObject.index,
+                    superset: array
+                });
+                newWorkout.save(function (err) {
+                    if (err) {
+                        callback(err);
+                    } else {
+                        callback();
+                    }
+
+                })
+            })
+        },
+        function (err) {
+            if (err) {
+                return next(err);
+            } else {
+                return next(null);
+            }
+
+        }
+    );
+
+};
+
 exports.createExercise = function (req, next) {
     var superset = [];
+    var date = new Date();
+    var selectedDate = new Date(req.body.date);
+
+    date.setDate(selectedDate.getDate());
+    date.setMonth(selectedDate.getMonth());
+    date.setYear(selectedDate.getFullYear());
+
     for (var i = 1; i <= parseInt(req.body.superset); i++) {
         superset.push({
-            workoutName: req.body['exercise' + i],
+            workoutName: toTitleCase(req.body['exercise' + i]),
             workoutSet: [{
                 rep: 0,
                 weight: 0,
@@ -23,13 +292,23 @@ exports.createExercise = function (req, next) {
             }]
         })
     }
-    var newWorkout = new Workout({
-        _userDetail: req.user._id,
-        superset: superset
+    Increment.findOneAndUpdate({_userDetail: req.user._id}, {$inc: {index: 1}}, {new: true}, function (err, incrementObject) {
+
+        if (err) {
+            console.log(err);
+        } else {
+            var newWorkout = new Workout({
+                timestamp:date,
+                _userDetail: req.user._id,
+                index: incrementObject.index,
+                superset: superset
+            });
+            newWorkout.save(function (err) {
+                return next(err);
+            })
+        }
+
     });
-    newWorkout.save(function (err) {
-        return next(err);
-    })
 };
 
 exports.addSet = function (req, next) {
@@ -129,4 +408,10 @@ exports.editSet = function (req, next) {
 
 
 };
+
+function toTitleCase(str) {
+    return str.replace(/\w\S*/g, function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+}
 

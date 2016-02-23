@@ -3,19 +3,61 @@ angular.module('workoutApp', ['workoutControllers', 'ngMaterial', 'ngMessages'])
 
 var workoutControllers = angular.module('workoutControllers', []);
 workoutControllers.controller('workoutControllers', ['$scope', '$http', '$window', '$timeout', '$q', '$log', function ($scope, $http, $window, $timeout, $q, $log) {
+    $scope.selectedDate = new Date();
+    $('#dp3').datepicker({
+        autoclose: true,
+        todayHighlight: true
+    });
+
+    $('#dp3').datepicker()
+        .on('changeDate', function(e) {
+            $scope.selectedDate = e.date;
+            $scope.exerciseLoading = true;
+            var startDate = moment(e.date).startOf('day').valueOf();
+            var endDate = moment(e.date).endOf('day').valueOf();
+
+            $http.get('/workout/api/get/' + startDate + '/' + endDate).success(function (data) {
+                $scope.workoutObjects = data.workoutObjects;
+                $scope.workoutStatusCode = data.statusCode;
+                $scope.workoutMessage = data.message;
+                $scope.exerciseLoading = false;
+            });
+        });
 
     $scope.sortType = 'timestamp';
     $scope.exerciseLoading = true;
     $scope.exerciseStatusCode = 0;
     $scope.exerciseMessage = '';
     $scope.exerciseData = {};
+    $scope.items = [
+        {
+            id: 1,
+            label: 'Chest & Back',
+        }, {
+            id: 2,
+            label: 'Legs'
+        }, {
+            id: 3,
+            label: 'Arms'
+        }, {
+            id: 4,
+            label: 'Delts'
+        }
+    ];
 
+    $scope.selected = $scope.items[0];
 
+    $scope.predetermined = {};
     $scope.addSetLoadingArray = [];
     $scope.repData = {};
     $scope.weightData = {};
     $scope.exerciseData.superset = 1;
-    $http.get('/workout/api/get/').success(function (data) {
+
+    var startDate = moment().startOf('day').valueOf();
+    var endDate = moment().endOf('day').valueOf();
+
+   // moment().startOf(String);
+    $http.get('/workout/api/get/' + startDate + '/' + endDate).success(function (data) {
         $scope.workoutObjects = data.workoutObjects;
         $scope.workoutStatusCode = data.statusCode;
         $scope.workoutMessage = data.message;
@@ -29,11 +71,20 @@ workoutControllers.controller('workoutControllers', ['$scope', '$http', '$window
         $scope.exerciseData['exercise2'] = self.searchText2;
         $scope.exerciseData['exercise3'] = self.searchText3;
         $scope.exerciseData['exercise4'] = self.searchText4;
+        $scope.exerciseData['date'] =$scope.selectedDate;
 
         $http.post('/exercise/api/create', $scope.exerciseData).success(function (data) {
             $scope.exerciseLoading = false;
             $scope.exerciseStatusCode = data.statusCode;
             $scope.exerciseMessage = data.message;
+            $scope.workoutObjects = data.workoutObjects;
+        });
+    };
+    $scope.submitExercise = function () {
+        $scope.itemLoading = true;
+        $scope.selected['date'] = $scope.selectedDate;
+        $http.post('/exercise/api/create-predetermined', $scope.selected).success(function (data) {
+            $scope.itemLoading = false;
             $scope.workoutObjects = data.workoutObjects;
         });
     };
@@ -48,7 +99,10 @@ workoutControllers.controller('workoutControllers', ['$scope', '$http', '$window
 
     $scope.deleteSet = function (workoutObject, index) {
         $scope.editSetLoading = true;
-        $http.post('/set/api/delete', {_id: workoutObject._id, index: index}).success(function (data) {
+        $http.post('/set/api/delete', {
+            _id: workoutObject._id,
+            index: index
+        }).success(function (data) {
             $scope.editSetLoading = false;
             $scope.workoutObjects = data.workoutObjects;
             $scope.showModal = false;
@@ -56,7 +110,12 @@ workoutControllers.controller('workoutControllers', ['$scope', '$http', '$window
     };
     $scope.editSet = function () {
         $scope.editSetLoading = true;
-        $http.post('/set/api/edit', {_id: $scope.editSetObject._id, index: $scope.selectedIndex, rep: $scope.repData, weight: $scope.weightData}).success(function (data) {
+        $http.post('/set/api/edit', {
+            _id: $scope.editSetObject._id,
+            index: $scope.selectedIndex,
+            rep: $scope.repData,
+            weight: $scope.weightData
+        }).success(function (data) {
             $scope.editSetLoading = false;
             $scope.workoutObjects = data.workoutObjects;
             $scope.showModal = false;

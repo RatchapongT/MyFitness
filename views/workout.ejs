@@ -1,208 +1,278 @@
 <!DOCTYPE html>
 <html lang = "en">
 
-    <% include partials/page/jsdefaults.ejs %>
-    <head>
-        <% include partials/page/head.ejs %>
-    </head>
-    <% include partials/page/navbar.ejs %>
+<% include partials/page/jsdefaults.ejs %>
+<head>
+    <% include partials/page/head.ejs %>
+</head>
+<% include partials/page/navbar.ejs %>
 
-    <script src = "/angular/workout.js"></script>
+<script src = "/angular/workout.js"></script>
 
-    <body ng-app = "workoutApp" ng-controller = "workoutControllers as ctrl" ng-cloak>
-        <div class = "container">
-            <h1><%= title %></h1>
+<body ng-app = "workoutApp" ng-controller = "workoutControllers as ctrl"
+      ng-cloak>
+<div class = "container">
+    <h1><%= title %></h1>
 
-            <h3>Exercise Input</h3>
+    <h3>Exercise Input</h3>
 
-            <form class = "form-horizontal" ng-submit = "createExercise()">
-                <fieldset>
-
-                    <div class = "form-group">
-                        <label class = "col-lg-2 control-label">Exercise Type</label>
-
-                        <div class = "col-lg-10">
-                            <div class = "radio">
-                                <label><input ng-model = "exerciseData.superset" value = 1 type = "radio" name = "optradio">Single Workout</label>
-                            </div>
-                            <div class = "radio">
-                                <label><input ng-model = "exerciseData.superset" value = 2 type = "radio" name = "optradio">Superset</label>
-                            </div>
-                            <div class = "radio">
-                                <label><input ng-model = "exerciseData.superset" value = 3 type = "radio" name = "optradio">Tripleset</label>
-                            </div>
-                            <div class = "radio">
-                                <label><input ng-model = "exerciseData.superset" value = 4 type = "radio" name = "optradio">Giantset</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class = "form-group" ng-if = "exerciseData.superset == 1 || exerciseData.superset == 2 || exerciseData.superset == 3 || exerciseData.superset == 4">
-                        <label class = "col-lg-2 control-label">Exercise 1</label>
-                        <md-content>
-                            <md-autocomplete ng-disabled = "ctrl.isDisabled"
-                                             md-no-cache = "ctrl.noCache"
-                                             md-selected-item = "ctrl.selectedItem1"
-                                             md-search-text-change = "ctrl.searchTextChange(ctrl.searchText1)"
-                                             md-search-text = "ctrl.searchText1"
-                                             md-selected-item-change = "ctrl.selectedItemChange(item1)"
-                                             md-items = "item1 in ctrl.querySearch(ctrl.searchText1)"
-                                             md-item-text = "item1.display" md-min-length = "0"
-                                             placeholder = "Exercise 1">
-                                <md-item-template>
-                                    <span md-highlight-text = "ctrl.searchText1" md-highlight-flags = "^i">{{item1.display}}</span>
-                                </md-item-template>
-                            </md-autocomplete>
-                            <br>
-
-                        </md-content>
-                    </div>
-                    <div class = "form-group" ng-if = "exerciseData.superset == 2 || exerciseData.superset == 3 || exerciseData.superset == 4">
-                        <label class = "col-lg-2 control-label">Exercise 2</label>
-                        <md-content>
-                            <md-autocomplete ng-disabled = "ctrl.isDisabled"
-                                             md-no-cache = "ctrl.noCache"
-                                             md-selected-item = "ctrl.selectedItem2"
-                                             md-search-text-change = "ctrl.searchTextChange(ctrl.searchText2)"
-                                             md-search-text = "ctrl.searchText2"
-                                             md-selected-item-change = "ctrl.selectedItemChange(item2)"
-                                             md-items = "item2 in ctrl.querySearch(ctrl.searchText2)"
-                                             md-item-text = "item2.display" md-min-length = "0"
-                                             placeholder = "Exercise 2">
-                                <md-item-template>
-                                    <span md-highlight-text = "ctrl.searchText2" md-highlight-flags = "^i">{{item2.display}}</span>
-                                </md-item-template>
-                            </md-autocomplete>
-                            <br>
-
-                        </md-content>
-                    </div>
-                    <div class = "form-group" ng-if = " exerciseData.superset == 3 || exerciseData.superset == 4">
-                        <label class = "col-lg-2 control-label">Exercise 3</label>
-                        <md-content>
-                            <md-autocomplete ng-disabled = "ctrl.isDisabled"
-                                             md-no-cache = "ctrl.noCache"
-                                             md-selected-item = "ctrl.selectedItem3"
-                                             md-search-text-change = "ctrl.searchTextChange(ctrl.searchText3)"
-                                             md-search-text = "ctrl.searchText3"
-                                             md-selected-item-change = "ctrl.selectedItemChange(item3)"
-                                             md-items = "item3 in ctrl.querySearch(ctrl.searchText3)"
-                                             md-item-text = "item3.display" md-min-length = "0"
-                                             placeholder = "Exercise 3">
-                                <md-item-template>
-                                    <span md-highlight-text = "ctrl.searchText3" md-highlight-flags = "^i">{{item3.display}}</span>
-                                </md-item-template>
-                            </md-autocomplete>
-                            <br>
-
-                        </md-content>
-                    </div>
-                    <div class = "form-group" ng-if = "exerciseData.superset == 4">
-                        <label class = "col-lg-2 control-label">Exercise 4</label>
-                        <md-content>
-                            <md-autocomplete ng-disabled = "ctrl.isDisabled"
-                                             md-no-cache = "ctrl.noCache"
-                                             md-selected-item = "ctrl.selectedItem4"
-                                             md-search-text-change = "ctrl.searchTextChange(ctrl.searchText4)"
-                                             md-search-text = "ctrl.searchText4"
-                                             md-selected-item-change = "ctrl.selectedItemChange(item4)"
-                                             md-items = "item4 in ctrl.querySearch(ctrl.searchText4)"
-                                             md-item-text = "item4.display" md-min-length = "0"
-                                             placeholder = "Exercise 4">
-                                <md-item-template>
-                                    <span md-highlight-text = "ctrl.searchText4" md-highlight-flags = "^i">{{item4.display}}</span>
-                                </md-item-template>
-                            </md-autocomplete>
-                            <br>
-
-                        </md-content>
-                    </div>
-                    <div class = "form-group" align = "center">
-                        <button ng-show = "!exerciseLoading" type = "submit" class = "btn btn-primary">Create Exercise
-                        </button>
-                    </div>
-                </fieldset>
-                <p class = "text-center" ng-show = "exerciseLoading">
-                    <span class = "fa fa-spinner fa-spin fa-3x"></span>
-                </p>
-
-                <div align = "center">
-                    <div class = "alert alert-success message"
-                         ng-if = "exerciseStatusCode == 1">
-                        {{exerciseMessage}}
-                    </div>
-                </div>
-                <div align = "center">
-                    <div class = "alert alert-danger message"
-                         ng-if = "exerciseStatusCode == 2">
-                        {{exerciseMessage}}
-                    </div>
-                </div>
-            </form>
-
-            <table style = "text-align:center;width: auto" class = "table table-bordered" ng-repeat = "workoutObject in workoutObjects">
-                <tr>
-                    <td rowspan = "2" style = "vertical-align: middle"><strong>{{formatDate(workoutObject.timestamp)[0]}} <br>{{formatDate(workoutObject.timestamp)[1]}}</strong></td>
-                    <td style = "width: 130px;" ng-repeat = "workoutSet in workoutObject.superset[0].workoutSet" colspan = "2"
-                        ng-style = "$index % 2 == 0 ? {'background-color': ' #f0f0f5'} : {'background-color': 'white'}">Set {{$index + 1}} <br>
-                        <span style = "font-size: 25px; margin-left: 5px"><i class = "fa fa-edit" style = "cursor: pointer" ng-click = "toggleEdit(workoutObject, $index)"></i></span>
-                    </td>
-                    <td rowspan = "{{workoutObject.superset.length + 2}}" style = "width: 50px; vertical-align: middle; font-size: 25px">
-                        <span style = "font-size: 25px" ng-show = "addSetLoadingArray[$index]" class = "fa fa-spinner fa-spin fa-3x"></span>
-                        <span ng-show = "!addSetLoadingArray[$index]"><i class = "fa fa-plus-circle" style = "color: #1abc9c; cursor: pointer" ng-click = "addSet(workoutObject, $index)"></i></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td style = "width: 65px"
-                        ng-repeat-start = "workoutSet in workoutObject.superset[0].workoutSet"
-                        ng-style = "$index % 2 == 0 ? {'background-color': ' #f0f0f5'} : {'background-color': 'white'}">Rep
-                    </td>
-                    <td style = "width: 65px"
-                        ng-style = "$index % 2 == 0 ? {'background-color': ' #f0f0f5'} : {'background-color': 'white'}"
-                        ng-repeat-end>Weight
-                    </td>
-                </tr>
-                <tr ng-repeat = "superset in workoutObject.superset">
-                    <td style = "width: 250px">{{superset.workoutName}}</td>
-                    <td ng-repeat-start = "workoutSet in superset.workoutSet"
-                        ng-style = "$index % 2 == 0 ? {'background-color': ' #f0f0f5'} : {'background-color': 'white'}">{{workoutSet.rep}}
-                    </td>
-                    <td ng-repeat-end
-                        ng-style = "$index % 2 == 0 ? {'background-color': ' #f0f0f5'} : {'background-color': 'white'}">{{workoutSet.weight}}
-                    </td>
-                </tr>
-
-            </table>
-            <modal title = "Edit Set" visible = "showModal"
-                   style = "padding-top: 20%">
-                <div align = "center">
-                    <form class = "form-horizontal" ng-submit = "editSet()">
-                        <table style = "text-align:center;width: auto;" class = "table table-bordered">
-                            <tr>
-                                <td>Name</td>
-                                <td>Rep</td>
-                                <td>Weight</td>
-                            </tr>
-                            <tr ng-repeat = "superset in editSetObject.superset">
-                                <td style = "width: 200px;  vertical-align: middle">{{superset.workoutName}}</td>
-                                <td><input style = "width: 65px" type = "text" class = "form-control"
-                                           placeholder = "Rep"
-                                           ng-model = "repData[$index]" required></td>
-                                <td><input style = "width: 65px" type = "text" class = "form-control"
-                                           placeholder = "Weight"
-                                           ng-model = "weightData[$index]" required></td>
-                            </tr>
-
-                        </table>
-
-                        <span style = "font-size: 25px" ng-show = "editSetLoading" class = "fa fa-spinner fa-spin fa-3x"></span>
-                        <button style = "margin-right: 50px" ng-show = "!editSetLoading" type = "submit" class = "btn btn-success">Save
-                        </button>
-                        <button type = "button" style = "margin-left: 50px" ng-show = "!editSetLoading" ng-click = "deleteSet(editSetObject, selectedIndex)" class = "btn btn-danger">Remove
-                        </button>
-                    </form>
-                </div>
-            </modal>
+    <form class = "form-horizontal" ng-submit = "submitExercise()">
+        <fieldset>
+            <select ng-options = "item as item.label for item in items track by item.id"
+                    ng-model = "selected"></select>
+        </fieldset>
+        <div class = "form-group" align = "center" style = "margin-top: 30px">
+            <button ng-show = "!itemLoading" type = "submit"
+                    class = "btn btn-primary">Create
+            </button>
+            <p class = "text-center" ng-show = "itemLoading">
+                <span class = "fa fa-spinner fa-spin fa-3x"></span>
+            </p>
         </div>
-    </body>
+
+    </form>
+    <form class = "form-horizontal" ng-submit = "createExercise()">
+        <fieldset>
+
+            <div class = "form-group">
+                <label class = "col-lg-2 control-label">Exercise Type</label>
+
+                <div class = "col-lg-10">
+                    <div class = "radio">
+                        <label><input ng-model = "exerciseData.superset"
+                                      value = 1 type = "radio"
+                                      name = "optradio">Single Workout</label>
+                    </div>
+                    <div class = "radio">
+                        <label><input ng-model = "exerciseData.superset"
+                                      value = 2 type = "radio"
+                                      name = "optradio">Superset</label>
+                    </div>
+                    <div class = "radio">
+                        <label><input ng-model = "exerciseData.superset"
+                                      value = 3 type = "radio"
+                                      name = "optradio">Tripleset</label>
+                    </div>
+                    <div class = "radio">
+                        <label><input ng-model = "exerciseData.superset"
+                                      value = 4 type = "radio"
+                                      name = "optradio">Giantset</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class = "form-group"
+                 ng-if = "exerciseData.superset == 1 || exerciseData.superset == 2 || exerciseData.superset == 3 || exerciseData.superset == 4">
+                <label class = "col-lg-2 control-label">Exercise 1</label>
+                <md-content>
+                    <md-autocomplete ng-disabled = "ctrl.isDisabled"
+                                     md-no-cache = "ctrl.noCache"
+                                     md-selected-item = "ctrl.selectedItem1"
+                                     md-search-text-change = "ctrl.searchTextChange(ctrl.searchText1)"
+                                     md-search-text = "ctrl.searchText1"
+                                     md-selected-item-change = "ctrl.selectedItemChange(item1)"
+                                     md-items = "item1 in ctrl.querySearch(ctrl.searchText1)"
+                                     md-item-text = "item1.display"
+                                     md-min-length = "0"
+                                     placeholder = "Exercise 1">
+                        <md-item-template>
+                            <span md-highlight-text = "ctrl.searchText1"
+                                  md-highlight-flags = "^i">{{item1.display}}</span>
+                        </md-item-template>
+                    </md-autocomplete>
+                    <br>
+
+                </md-content>
+            </div>
+            <div class = "form-group"
+                 ng-if = "exerciseData.superset == 2 || exerciseData.superset == 3 || exerciseData.superset == 4">
+                <label class = "col-lg-2 control-label">Exercise 2</label>
+                <md-content>
+                    <md-autocomplete ng-disabled = "ctrl.isDisabled"
+                                     md-no-cache = "ctrl.noCache"
+                                     md-selected-item = "ctrl.selectedItem2"
+                                     md-search-text-change = "ctrl.searchTextChange(ctrl.searchText2)"
+                                     md-search-text = "ctrl.searchText2"
+                                     md-selected-item-change = "ctrl.selectedItemChange(item2)"
+                                     md-items = "item2 in ctrl.querySearch(ctrl.searchText2)"
+                                     md-item-text = "item2.display"
+                                     md-min-length = "0"
+                                     placeholder = "Exercise 2">
+                        <md-item-template>
+                            <span md-highlight-text = "ctrl.searchText2"
+                                  md-highlight-flags = "^i">{{item2.display}}</span>
+                        </md-item-template>
+                    </md-autocomplete>
+                    <br>
+
+                </md-content>
+            </div>
+            <div class = "form-group"
+                 ng-if = " exerciseData.superset == 3 || exerciseData.superset == 4">
+                <label class = "col-lg-2 control-label">Exercise 3</label>
+                <md-content>
+                    <md-autocomplete ng-disabled = "ctrl.isDisabled"
+                                     md-no-cache = "ctrl.noCache"
+                                     md-selected-item = "ctrl.selectedItem3"
+                                     md-search-text-change = "ctrl.searchTextChange(ctrl.searchText3)"
+                                     md-search-text = "ctrl.searchText3"
+                                     md-selected-item-change = "ctrl.selectedItemChange(item3)"
+                                     md-items = "item3 in ctrl.querySearch(ctrl.searchText3)"
+                                     md-item-text = "item3.display"
+                                     md-min-length = "0"
+                                     placeholder = "Exercise 3">
+                        <md-item-template>
+                            <span md-highlight-text = "ctrl.searchText3"
+                                  md-highlight-flags = "^i">{{item3.display}}</span>
+                        </md-item-template>
+                    </md-autocomplete>
+                    <br>
+
+                </md-content>
+            </div>
+            <div class = "form-group" ng-if = "exerciseData.superset == 4">
+                <label class = "col-lg-2 control-label">Exercise 4</label>
+                <md-content>
+                    <md-autocomplete ng-disabled = "ctrl.isDisabled"
+                                     md-no-cache = "ctrl.noCache"
+                                     md-selected-item = "ctrl.selectedItem4"
+                                     md-search-text-change = "ctrl.searchTextChange(ctrl.searchText4)"
+                                     md-search-text = "ctrl.searchText4"
+                                     md-selected-item-change = "ctrl.selectedItemChange(item4)"
+                                     md-items = "item4 in ctrl.querySearch(ctrl.searchText4)"
+                                     md-item-text = "item4.display"
+                                     md-min-length = "0"
+                                     placeholder = "Exercise 4">
+                        <md-item-template>
+                            <span md-highlight-text = "ctrl.searchText4"
+                                  md-highlight-flags = "^i">{{item4.display}}</span>
+                        </md-item-template>
+                    </md-autocomplete>
+                    <br>
+
+                </md-content>
+            </div>
+            <div class = "form-group" align = "center">
+                <button ng-show = "!exerciseLoading" type = "submit"
+                        class = "btn btn-primary">Create Exercise
+                </button>
+            </div>
+        </fieldset>
+        <p class = "text-center" ng-show = "exerciseLoading">
+            <span class = "fa fa-spinner fa-spin fa-3x"></span>
+        </p>
+
+        <div align = "center">
+            <div class = "alert alert-success message"
+                 ng-if = "exerciseStatusCode == 1">
+                {{exerciseMessage}}
+            </div>
+        </div>
+        <div align = "center">
+            <div class = "alert alert-danger message"
+                 ng-if = "exerciseStatusCode == 2">
+                {{exerciseMessage}}
+            </div>
+        </div>
+    </form>
+
+
+    <div align = "center" style="margin-bottom: 30px">
+        <div id = 'dp3' class = "input-group date" style = "width: 25%">
+            <input type = "text" class = "form-control"><span
+                    class = "input-group-addon"><i
+                        class = "glyphicon glyphicon-th"></i></span>
+        </div>
+    </div>
+
+    <table style = "text-align:center;width: auto"
+           class = "table table-bordered"
+           ng-repeat = "workoutObject in workoutObjects">
+        <tr>
+            <td rowspan = "2" style = "vertical-align: middle"><strong>{{formatDate(workoutObject.timestamp)[0]}}
+                    <br>{{formatDate(workoutObject.timestamp)[1]}}</strong></td>
+            <td style = "width: 130px;"
+                ng-repeat = "workoutSet in workoutObject.superset[0].workoutSet"
+                colspan = "2"
+                ng-style = "$index % 2 == 0 ? {'background-color': ' #f0f0f5'} : {'background-color': 'white'}">
+                Set {{$index + 1}} <br>
+                <span style = "font-size: 25px; margin-left: 5px"><i
+                            class = "fa fa-edit" style = "cursor: pointer"
+                            ng-click = "toggleEdit(workoutObject, $index)"></i></span>
+            </td>
+            <td rowspan = "{{workoutObject.superset.length + 2}}"
+                style = "width: 50px; vertical-align: middle; font-size: 25px">
+                <span style = "font-size: 25px"
+                      ng-show = "addSetLoadingArray[$index]"
+                      class = "fa fa-spinner fa-spin fa-3x"></span>
+                <span ng-show = "!addSetLoadingArray[$index]"><i
+                            class = "fa fa-plus-circle"
+                            style = "color: #1abc9c; cursor: pointer"
+                            ng-click = "addSet(workoutObject, $index)"></i></span>
+            </td>
+        </tr>
+        <tr>
+            <td style = "width: 65px"
+                ng-repeat-start = "workoutSet in workoutObject.superset[0].workoutSet"
+                ng-style = "$index % 2 == 0 ? {'background-color': ' #f0f0f5'} : {'background-color': 'white'}">
+                Rep
+            </td>
+            <td style = "width: 65px"
+                ng-style = "$index % 2 == 0 ? {'background-color': ' #f0f0f5'} : {'background-color': 'white'}"
+                ng-repeat-end>Weight
+            </td>
+        </tr>
+        <tr ng-repeat = "superset in workoutObject.superset">
+            <td style = "width: 250px">{{superset.workoutName}}</td>
+            <td ng-repeat-start = "workoutSet in superset.workoutSet"
+                ng-style = "$index % 2 == 0 ? {'background-color': ' #f0f0f5'} : {'background-color': 'white'}">
+                {{workoutSet.rep}}
+            </td>
+            <td ng-repeat-end
+                ng-style = "$index % 2 == 0 ? {'background-color': ' #f0f0f5'} : {'background-color': 'white'}">
+                {{workoutSet.weight}}
+            </td>
+        </tr>
+
+    </table>
+    <modal title = "Edit Set" visible = "showModal" style = "padding-top: 20%">
+        <div align = "center">
+            <form class = "form-horizontal" ng-submit = "editSet()">
+                <table style = "text-align:center;width: auto;"
+                       class = "table table-bordered">
+                    <tr>
+                        <td>Name</td>
+                        <td>Rep</td>
+                        <td>Weight</td>
+                    </tr>
+                    <tr ng-repeat = "superset in editSetObject.superset">
+                        <td style = "width: 200px;  vertical-align: middle">
+                            {{superset.workoutName}}
+                        </td>
+                        <td><input style = "width: 65px" type = "text"
+                                   class = "form-control" placeholder = "Rep"
+                                   ng-model = "repData[$index]" required></td>
+                        <td><input style = "width: 65px" type = "text"
+                                   class = "form-control" placeholder = "Weight"
+                                   ng-model = "weightData[$index]" required>
+                        </td>
+                    </tr>
+
+                </table>
+
+                <span style = "font-size: 25px" ng-show = "editSetLoading"
+                      class = "fa fa-spinner fa-spin fa-3x"></span>
+                <button style = "margin-right: 50px" ng-show = "!editSetLoading"
+                        type = "submit" class = "btn btn-success">Save
+                </button>
+                <button type = "button" style = "margin-left: 50px"
+                        ng-show = "!editSetLoading"
+                        ng-click = "deleteSet(editSetObject, selectedIndex)"
+                        class = "btn btn-danger">Remove
+                </button>
+            </form>
+        </div>
+    </modal>
+</div>
+</body>
 </html>

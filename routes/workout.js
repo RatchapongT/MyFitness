@@ -1,3 +1,4 @@
+
 var express = require('express');
 var router = express.Router();
 var databaseFunctions = require('../database-services/workout');
@@ -11,12 +12,21 @@ router.get('/workout', function (req, res, next) {
 });
 
 //Retrieve Edit Users Profiles List
-router.get('/workout/api/get/', function (req, res) {
+router.get('/workout/api/get/:startDate/:endDate', function (req, res) {
     return getWorkoutObjects(req, res);
 });
 
 router.post('/exercise/api/create/', function (req, res) {
     databaseFunctions.createExercise(req, function (err) {
+        if (err) {
+            return getWorkoutObjects(req, res, err.message, 2);
+        }
+        return getWorkoutObjects(req, res, 'Successfully Created', 1);
+    });
+});
+
+router.post('/exercise/api/create-predetermined/', function (req, res) {
+    databaseFunctions.createPredeterminedExercise(req, function (err) {
         if (err) {
             return getWorkoutObjects(req, res, err.message, 2);
         }
@@ -61,6 +71,7 @@ router.delete('/workout/api/delete/:_id', function (req, res) {
 function getWorkoutObjects(req, res, message, statusCode) {
     databaseFunctions.findAllWorkout(req, function (err, workoutObjects) {
         if (err) {
+            console.log(err);
             return res.send(err);
         }
         return res.json({

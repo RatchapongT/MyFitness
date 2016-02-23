@@ -1,5 +1,5 @@
 var User = require('../database-models/databaseModels').User;
-
+var Increment = require('../database-models/databaseModels').Increment;
 /*
  [READ]
  Find user used by authorization
@@ -25,6 +25,14 @@ exports.registerUser = function (req, next) {
 
     });
     newUser.save(function (err) {
-        return next(err);
+        var newIncrement = new Increment({
+            _userDetail: newUser._id,
+            index: 0
+        });
+        newIncrement.save(function (err) {
+            return next(err);
+        });
     });
+
 };
+
