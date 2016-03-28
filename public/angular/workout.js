@@ -32,16 +32,19 @@ workoutControllers.controller('workoutControllers', ['$scope', '$http', '$window
     $scope.items = [
         {
             id: 1,
-            label: 'Chest & Back',
+            label: 'Chest & Back (Phase 1)'
         }, {
             id: 2,
-            label: 'Legs'
+            label: 'Legs (Phase 1)'
         }, {
             id: 3,
-            label: 'Arms'
+            label: 'Arms (Phase 1)'
         }, {
             id: 4,
-            label: 'Delts'
+            label: 'Delts (Phase 1)'
+        }, {
+            id: 5,
+            label: 'Chest & Back (Phase 2)'
         }
     ];
 

@@ -5,12 +5,12 @@ var _ = require('underscore');
 var moment = require('moment');
 var async = require('async');
 exports.findAllWorkout = function (req, next) {
-    var sDate = req.params.startDate ? req.params.startDate: moment(req.body.date).startOf('day').valueOf();
-    var eDate = req.params.endDate ? req.params.endDate: moment(req.body.date).endOf('day').valueOf();
+    var sDate = req.params.startDate ? req.params.startDate : moment(req.body.date).startOf('day').valueOf();
+    var eDate = req.params.endDate ? req.params.endDate : moment(req.body.date).endOf('day').valueOf();
 
     Workout.find({
         _userDetail: req.user._id,
-        timestamp: {$gte: sDate , $lt: eDate}
+        timestamp: {$gte: sDate, $lt: eDate}
     }).sort({timestamp: 1}).exec(function (err, workoutObjects) {
         if (err) {
             return next(err, null);
@@ -223,6 +223,121 @@ exports.createPredeterminedExercise = function (req, next) {
 
         ];
     }
+
+    if (req.body.id == 5) {
+        exercise = [
+            {
+                superset: [
+                    {
+                        workOutName: 'Decline Bench Sit-Up',
+                        setRep: [1]
+                    },
+
+                    {
+                        workOutName: 'Deadlift',
+                        setRep: [10, 8, 6]
+                    }
+                ]
+            },
+            {
+                superset: [
+                    {
+                        workOutName: 'Barbell Incline Bench Press',
+                        setRep: [15, 12, 8, 5, 3]
+                    },
+
+                    {
+                        workOutName: 'Weighted Chin-Up',
+                        setRep: [15, 12, 8, 5, 3]
+                    }
+                ]
+            },
+            {
+                superset: [
+                    {
+                        workOutName: 'Barbell Bench Press',
+                        setRep: [12, 12, 8, 6]
+                    },
+
+                    {
+                        workOutName: 'Chin-up',
+                        setRep: [99, 99, 99, 99]
+                    }
+                ]
+            },
+            {
+                superset: [
+                    {
+                        workOutName: 'Dumbbell Fly',
+                        setRep: [28, 28, 28, 28]
+                    },
+
+                    {
+                        workOutName: 'Bent-Over Dumbbell Row',
+                        setRep: [12, 12, 12, 12]
+                    }
+                ]
+            },
+            {
+                superset: [
+                    {
+                        workOutName: 'Dip',
+                        setRep: [10, 10, 10, 10]
+                    },
+
+                    {
+                        workOutName: 'Close-grip chin-up',
+                        setRep: [10, 10, 10, 10]
+                    }
+                ]
+            },
+            {
+                superset: [
+                    {
+                        workOutName: 'Dumbbell pull-over',
+                        setRep: [15, 15, 15, 15, 15]
+                    },
+
+                    {
+                        workOutName: 'Dip',
+                        setRep: [99, 99, 99, 99, 99]
+                    },
+                    {
+                        workOutName: 'Cable cross-over',
+                        setRep: [15, 15, 15, 15, 15]
+                    }
+                ]
+            },
+            {
+                superset: [
+                    {
+                        workOutName: 'Hanging straight-leg raise',
+                        setRep: [20]
+                    },
+
+                    {
+                        workOutName: 'Hanging knee-up',
+                        setRep: [20]
+                    },
+                    {
+                        workOutName: 'Crunch',
+                        setRep: [50]
+                    },
+                    {
+                        workOutName: 'Seated leg tuck',
+                        setRep: [30]
+                    }
+                    ,
+                    {
+                        workOutName: 'Stick Twist',
+                        setRep: [100]
+                    }
+                ]
+            }
+
+
+        ];
+    }
     var date = new Date();
     async.each(exercise,
         function (ex, callback) {
@@ -298,7 +413,7 @@ exports.createExercise = function (req, next) {
             console.log(err);
         } else {
             var newWorkout = new Workout({
-                timestamp:date,
+                timestamp: date,
                 _userDetail: req.user._id,
                 index: incrementObject.index,
                 superset: superset
